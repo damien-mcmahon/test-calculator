@@ -90,8 +90,43 @@ describe('useCalculator', () => {
     })
   })
 
+  describe('subtract', () => {
+    it('changes the display value to 0', () => {
+      const { result } = renderHook(() => useCalculator())
+      act(() => {
+        result.current.methods.setNumber(9);
+        result.current.methods.setNumber(9);
+      })
+
+      expect(result.current.displayValue).toEqual(99);
+
+      act(() => {
+        result.current.methods.subtract()
+      })
+
+      expect(result.current.displayValue).toBe(0)
+    })
+
+    it('sets the second display value', () => {
+      const { result } = renderHook(() => useCalculator())
+      act(() => {
+        result.current.methods.setNumber(9);
+        result.current.methods.setNumber(9);
+      })
+
+      expect(result.current.displayValue).toEqual(99);
+
+      act(() => {
+        result.current.methods.subtract()
+        result.current.methods.setNumber(5)
+      }) 
+
+      expect(result.current.displayValue).toEqual(5)
+    })
+  })
+
   describe('total', () => {
-    it('adds to numbers together', () => {
+    it('adds two numbers together', () => {
       const { result} = renderHook(() => useCalculator())
       act(() => {
         result.current.methods.setNumber(1)
@@ -106,5 +141,42 @@ describe('useCalculator', () => {
 
       expect(result.current.displayValue).toBe(444)
     })
+
+    it('subtracts two numbers', () => {
+      const { result} = renderHook(() => useCalculator())
+      act(() => {
+        result.current.methods.setNumber(1)
+        result.current.methods.setNumber(2)
+        result.current.methods.setNumber(3)
+        result.current.methods.subtract();
+        result.current.methods.setNumber(3)
+        result.current.methods.setNumber(2)
+        result.current.methods.setNumber(1)
+        result.current.methods.total()
+      })
+
+      expect(result.current.displayValue).toBe(-198)
+    })
   })
+
+
+  describe('clear', () => {
+    it('clears the displayed number', () => {
+      const { result } = renderHook(() => useCalculator());
+
+      act(() => {
+        result.current.methods.setNumber(1);
+      })
+
+      expect(result.current.displayValue).toEqual(1);
+
+      act(() => {
+        result.current.methods.clear()
+      })
+
+      expect(result.current.displayValue).toEqual(0);
+    })
+  });
+
+
 })

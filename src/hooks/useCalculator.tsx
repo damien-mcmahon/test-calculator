@@ -1,12 +1,14 @@
-import { useState} from 'react'
+import { useState } from 'react'
 import { flushSync } from 'react-dom'
 
 type CalculatorOperator = 'ADD' | 'SUBTRACT' | 'DIVIDE' | 'MULTIPLY' | undefined
 
-type CalculatorMethods = {
+export type CalculatorMethods = {
   setNumber(value: number):void;
   add():void
   total():void
+  clear(): void;
+  subtract():void
 }
 
 type UseCalculator = {
@@ -42,14 +44,34 @@ export const useCalculator = (): UseCalculator => {
     flushSync(() => {
       setDisplayValue(0)
     })
-    
-    
+  }
+
+  const subtract = () => {
+    setOperator('SUBTRACT');
+    setStoredValue(displayValue)
+    flushSync(() => {
+      setDisplayValue(0)
+    }) 
   }
 
   const total = () => {
     if(operator && storedValue) {
-      setDisplayValue(displayValue + storedValue);
+      switch(operator) {
+        case 'ADD': 
+          setDisplayValue(displayValue + storedValue);
+          break
+        case 'SUBTRACT':
+          setDisplayValue(storedValue - displayValue)
+          break
+      }
+      
     }
+  }
+
+  const clear = () => {
+    setDisplayValue(0);
+    setOperator(undefined);
+    setStoredValue(undefined)
   }
   
   
@@ -58,7 +80,9 @@ export const useCalculator = (): UseCalculator => {
     methods: {
       setNumber,
       add,
-      total
+      total,
+      clear, 
+      subtract
     }
   }
 }
